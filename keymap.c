@@ -15,7 +15,8 @@ enum custom_keycodes {
   EPRM,
   VRSN,
   RGB_SLD,
-  
+  VIM_PASTE_FROM_0_REG // macro corresponding to "0p and "0P
+
 };
 
 // Note: TAP_DANCE_ENABLE = true must be set in rules.mk in ergodox_ez directory
@@ -116,10 +117,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                                   /*[############]  [############]*/KC_TRANSPARENT,
                                                                     KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
 
-    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
-    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
-                    KC_1,           KC_2,           KC_3,           KC_4,           KC_5,           KC_TRANSPARENT,
-    KC_TRANSPARENT, KC_6,           KC_7,           KC_8,           KC_9,           KC_0,           KC_DOT,
+    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,       KC_TRANSPARENT,
+    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, VIM_PASTE_FROM_0_REG, KC_TRANSPARENT,
+                    KC_1,           KC_2,           KC_3,           KC_4,           KC_5,                 KC_TRANSPARENT,
+    KC_TRANSPARENT, KC_6,           KC_7,           KC_8,           KC_9,           KC_0,                 KC_DOT,
     KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
     KC_TRANSPARENT,  KC_TRANSPARENT,
     KC_TRANSPARENT,/*[############] [############]*/
@@ -214,6 +215,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
       break;
+    case VIM_PASTE_FROM_0_REG :
+      if( record->event.pressed ) {
+        if( keyboard_report->mods & (MOD_BIT( KC_LSFT ) ) ) // Check to see if SHIFT is pressed
+          SEND_STRING( "\"0P" );
+        else
+          SEND_STRING( "\"0p" );
+      }
     
   }
   return true;
