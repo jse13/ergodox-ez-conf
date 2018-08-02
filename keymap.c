@@ -73,7 +73,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_LCTL, KC_LALT, KC_TRANSPARENT, KC_TRANSPARENT, MO(1),
                                                                KC_TRANSPARENT, KC_TRANSPARENT,
                                                       /*[#######]  [#####]*/   KC_TRANSPARENT,
-                                                        KC_BSPACE, KC_LGUI,    KC_TRANSPARENT,
+                                                        KC_BSPACE, KC_LGUI,    LCTL(LSFT(KC_TAB)),
 
     KC_TRANSPARENT, KC_6,           KC_7,           KC_8,           KC_9,           KC_0,      KC_EQUAL,
     KC_TRANSPARENT, KC_Y,           KC_U,           KC_I,           KC_O,           KC_P,      KC_BSLASH,
