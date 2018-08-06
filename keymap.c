@@ -80,9 +80,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /*[#####]*/     KC_H,           KC_J,           KC_K,           KC_L,           KC_SCOLON, KC_QUOTE,
       KC_RABK,      KC_N,           KC_M,           KC_COMMA,       KC_DOT,         KC_SLASH,  KC_TRANSPARENT,
                                     MO(2),          KC_TRANSPARENT, KC_TRANSPARENT, KC_RALT,   KC_RCTRL,
-    KC_TRANSPARENT,KC_TRANSPARENT,
+    LCTL(LALT(KC_MINUS)), LCTL(LSFT(KC_MINUS)),
     KC_TRANSPARENT,/*[######]  [######]*/
-    KC_TRANSPARENT,  KC_ENTER, KC_SPACE
+    KC_TRANSPARENT,       KC_ENTER, KC_SPACE
   ),
 
   /* Number row, left-hand numbers, and symbols */
