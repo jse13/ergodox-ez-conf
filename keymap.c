@@ -2,44 +2,15 @@
 #include "debug.h"
 #include "action_layer.h"
 #include "version.h"
+#include "quantum.h"
+#include "process_keycode/process_tap_dance.h"
 
 
 #include "keymap_german.h"
 
 #include "keymap_nordic.h"
 
-
-
-enum custom_keycodes {
-  PLACEHOLDER = SAFE_RANGE, // can always be here
-  EPRM,
-  VRSN,
-  RGB_SLD,
-  VIM_PASTE_FROM_0_REG // macro corresponding to "0p and "0P
-
-};
-
-// Note: TAP_DANCE_ENABLE = true must be set in rules.mk in ergodox_ez directory
-// https://docs.qmk.fm/#/feature_tap_dance
-// Tap Dance Declarations
-enum {
-  TD_MINUS_UNDERSCORE = 0,
-  TD_EQUALS_PLUS,
-  TD_LTGT,
-  TD_PARENS,
-  TD_SQUARES,
-  TD_CURLIES
-};
-
-// Tap Dance Definitions
-qk_tap_dance_action_t tap_dance_actions[] = {
-  [ TD_MINUS_UNDERSCORE ] = ACTION_TAP_DANCE_DOUBLE( KC_MINUS, KC_UNDS ),
-  [ TD_EQUALS_PLUS ] = ACTION_TAP_DANCE_DOUBLE( KC_EQUAL, KC_PLUS ),
-  [ TD_LTGT ] =  ACTION_TAP_DANCE_DOUBLE( KC_LABK, KC_RABK ),
-  [ TD_PARENS ] = ACTION_TAP_DANCE_DOUBLE( KC_LPRN, KC_RPRN ),
-  [ TD_SQUARES ] =  ACTION_TAP_DANCE_DOUBLE( KC_LBRACKET, KC_RBRACKET ),
-  [ TD_CURLIES ] =  ACTION_TAP_DANCE_DOUBLE( KC_LCBR, KC_RCBR )
-};
+#include "squeench.h"
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* How the ergodox keys are laid out:
@@ -73,7 +44,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_LCTL, KC_LALT, KC_TRANSPARENT, KC_TRANSPARENT, MO(1),
                                                                LCTL(LSFT(KC_B)), LCTL(LSFT(KC_T)),
                                                   /*[#######]  [#####]*/     KC_TRANSPARENT,
-                                                    KC_BSPACE, KC_LGUI,      LCTL(LSFT(KC_TAB)),
+                                                    KC_BSPACE, TD( TD_WIN_CTRL ),      LCTL(LSFT(KC_TAB)),
 
     KC_TRANSPARENT, KC_6,           KC_7,           KC_8,           KC_9,           KC_0,      KC_EQUAL,
     KC_TRANSPARENT, KC_Y,           KC_U,           KC_I,           KC_O,           KC_P,      KC_BSLASH,
@@ -81,8 +52,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_RABK,      KC_N,           KC_M,           KC_COMMA,       KC_DOT,         KC_SLASH,  KC_TRANSPARENT,
                                     MO(2),          KC_TRANSPARENT, KC_TRANSPARENT, KC_RALT,   KC_RCTRL,
     LCTL(LALT(KC_MINUS)), LCTL(LSFT(KC_MINUS)),
-    KC_TRANSPARENT,       /*[######]  [######]*/
-    KC_TRANSPARENT,       KC_ENTER, KC_SPACE
+    LSFT(KC_PGUP),       /*[######]  [######]*/
+    LSFT(KC_PGDN),       KC_ENTER, KC_SPACE
   ),
 
   /* Number row, left-hand numbers, and symbols */
