@@ -10,7 +10,7 @@
 
 #include "keymap_nordic.h"
 
-#include "squeench.h"
+#include "include/squeench.h"
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* How the ergodox keys are laid out:
@@ -42,9 +42,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_ESCAPE,          KC_A,    KC_S,           KC_D,           KC_F, KC_G,/*[#####]*/
     TD( TD_LSFT_CAPS ), KC_Z,    KC_X,           KC_C,           KC_V, KC_B,  KC_LABK,
       KC_LCTL, KC_LALT, KC_TRANSPARENT, KC_TRANSPARENT, MO(1),
-                                                               LCTL(LSFT(KC_B)),       LCTL(LSFT(KC_T)),
-                                                  /*[#######]  [###############]*/     KC_TRANSPARENT,
-                                                    KC_BSPACE, TD( TD_WIN_CTRL ),      LCTL(LSFT(KC_TAB)),
+                                                               LCTL(LSFT(KC_B)),           LCTL(LSFT(KC_T)),
+                                                  /*[#######]  [###################]*/     KC_TRANSPARENT,
+                                                    KC_BSPACE, TD( TD_WIN_CTRL_ALT ),      LCTL(LSFT(KC_TAB)),
 
     KC_TRANSPARENT, KC_6,           KC_7,           KC_8,           KC_9,           KC_0,      KC_EQUAL,
     KC_TRANSPARENT, KC_Y,           KC_U,           KC_I,           KC_O,           KC_P,      KC_BSLASH,
