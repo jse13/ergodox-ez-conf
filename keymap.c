@@ -37,13 +37,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   /* Base layer */
   [0] = LAYOUT_ergodox(
-    KC_GRAVE,  KC_1,    KC_2,           KC_3,           KC_4, KC_5,  KC_NUMLOCK,
-    KC_TAB,    KC_Q,    KC_W,           KC_E,           KC_R, KC_T,  KC_TRANSPARENT,
-    KC_ESCAPE, KC_A,    KC_S,           KC_D,           KC_F, KC_G,/*[#####]*/
-    KC_LSHIFT, KC_Z,    KC_X,           KC_C,           KC_V, KC_B,  KC_LABK,
+    KC_GRAVE,           KC_1,    KC_2,           KC_3,           KC_4, KC_5,  KC_NUMLOCK,
+    KC_TAB,             KC_Q,    KC_W,           KC_E,           KC_R, KC_T,  KC_TRANSPARENT,
+    KC_ESCAPE,          KC_A,    KC_S,           KC_D,           KC_F, KC_G,/*[#####]*/
+    TD( TD_LSFT_CAPS ), KC_Z,    KC_X,           KC_C,           KC_V, KC_B,  KC_LABK,
       KC_LCTL, KC_LALT, KC_TRANSPARENT, KC_TRANSPARENT, MO(1),
-                                                               LCTL(LSFT(KC_B)), LCTL(LSFT(KC_T)),
-                                                  /*[#######]  [#####]*/     KC_TRANSPARENT,
+                                                               LCTL(LSFT(KC_B)),       LCTL(LSFT(KC_T)),
+                                                  /*[#######]  [###############]*/     KC_TRANSPARENT,
                                                     KC_BSPACE, TD( TD_WIN_CTRL ),      LCTL(LSFT(KC_TAB)),
 
     KC_TRANSPARENT, KC_6,           KC_7,           KC_8,           KC_9,           KC_0,      KC_EQUAL,
