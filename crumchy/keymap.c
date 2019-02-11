@@ -1,4 +1,26 @@
 #include QMK_KEYBOARD_H
+#include "quantum.h"
+#include "process_keycode/process_tap_dance.h"
+
+enum {
+    TD_EQUALS_PLUS = 0,
+    TD_MINUS_UNDERSCORE,
+    TD_LTGT,
+    TD_PARENS,
+    TD_SQUARES,
+    TD_CURLIES
+};
+
+qk_tap_dance_action_t tap_dance_actions[] = {
+  [ TD_EQUALS_PLUS ] = ACTION_TAP_DANCE_DOUBLE( KC_EQUAL, KC_PLUS ),
+  [ TD_MINUS_UNDERSCORE ] = ACTION_TAP_DANCE_DOUBLE( KC_MINUS, KC_UNDS ),
+  [ TD_LTGT ] =  ACTION_TAP_DANCE_DOUBLE( KC_LABK, KC_RABK ),
+  [ TD_PARENS ] = ACTION_TAP_DANCE_DOUBLE( KC_LPRN, KC_RPRN ),
+  [ TD_SQUARES ] =  ACTION_TAP_DANCE_DOUBLE( KC_LBRACKET, KC_RBRACKET ),
+  [ TD_CURLIES ] =  ACTION_TAP_DANCE_DOUBLE( KC_LCBR, KC_RCBR ),
+  // [ TD_WIN_CTRL_ALT ] =  ACTION_TAP_DANCE_FN_ADVANCED( NULL, win_ctrl_alt_finished, win_ctrl_alt_reset ),
+//   [ TD_LSFT_CAPS ] =  ACTION_TAP_DANCE_FN_ADVANCED( NULL, lsft_caps_finished, lsft_caps_reset ),
+};
 
 extern keymap_config_t keymap_config;
 
@@ -7,15 +29,17 @@ extern keymap_config_t keymap_config;
 // Layer names don't all need to be of the same length, obviously, and you can also skip them
 // entirely and just use numbers.
 #define _QWERTY 0
-#define _LOWER 3
-#define _RAISE 4
-#define _ADJUST 16
+#define _LOWER 1
+#define _RAISE 2
+#define _FCN 4
+#define _NAV 4
 
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,
   LOWER,
   RAISE,
-  ADJUST,
+  FCN,
+  NAV,
 };
 
 // Fillers to make layering more clear
@@ -32,14 +56,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|------+------+------+------+------+------|
  * | Shift|   Z  |   X  |   C  |   V  |   B  |   N  |   M  |   ,  |   .  |   /  |Enter |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |Adjust| Ctrl | Alt  | GUI  |Lower |Space |Space |Raise | Left | Down |  Up  |Right |
- * `-----------------------------------------------------------------------------------'
- */
+ * | Ctrl | Alt  |      | Bksp | GUI  |Lower |Raise |Space |Enter |      |      |      |
+ * `-----------------------------------------------------------------------------------' */
 [_QWERTY] = LAYOUT_ortho_4x12( \
   KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_DEL, \
   KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, \
   KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT , \
-  KC_LCTL,  KC_LALT, MO(_LOWER),  KC_BSPC, KC_LGUI, MO(_LOWER),  MO(_RAISE), KC_SPC, KC_ENT, KC_DOWN, KC_UP, KC_RGHT \
+  KC_LCTL,  KC_LALT, MO(_LOWER),  KC_BSPC, KC_LGUI, MO(_LOWER),  MO(_RAISE), KC_SPC, KC_ENT, _______, _______, _______\
 ),
 
 /* Lower
@@ -56,8 +79,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_LOWER] = LAYOUT_ortho_4x12( \
   KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_BSPC, \
   KC_TILD,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_GRAVE, \
-  BL_STEP, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,S(KC_NUHS),S(KC_NUBS),_______, _______, _______, \
-  _______, _______, _______, _______, _______, _______, _______, _______, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY \
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,\
+  _______, _______, _______, _______, _______, _______, _______, TD( TD_EQUALS_PLUS ), TD( TD_MINUS_UNDERSCORE ), _______, _______, _______\
 ),
 
 /* Raise
@@ -72,30 +95,47 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------------------------------------------------------------------'
  */
 [_RAISE] = LAYOUT_ortho_4x12( \
-  KC_DEL,  KC_EXLM,   KC_AT,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC, KC_BSLS, \
-  KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC, \
-  _______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_NUHS, KC_NUBS, _______, _______, _______, \
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,\
+  _______, TD( TD_LTGT ), TD( TD_PARENS ), TD( TD_SQUARES ), TD( TD_CURLIES), _______, _______, _______, _______, _______, _______, _______,\
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,\
+  _______, _______, _______, _______, _______, MO( _NAV ), _______, _______, _______, _______, _______, _______\
+),
+
+/* Fc
+ * ,-----------------------------------------------------------------------------------.
+ * |   `  |   1  |   2  |   3  |   4  |   5  |   6  |   7  |   8  |   9  |   0  | Bksp |
+ * |------+------+------+------+------+-------------+------+------+------+------+------|
+ * | Del  |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |   -  |   =  |   [  |   ]  |  \   |
+ * |------+------+------+------+------+------|------+------+------+------+------+------|
+ * |      |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |ISO # |ISO / |      |      |Enter |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |      |      |      |             |      | Next | Vol- | Vol+ | Play |
+ * `-----------------------------------------------------------------------------------'
+ */
+[_FCN] = LAYOUT_ortho_4x12( \
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,\
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,\
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,\
   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______\
 ),
 
-/* Adjust (Lower + Raise)
+/* NAV
  * ,-----------------------------------------------------------------------------------.
- * |      | Reset|      |      |      |      |      |      |      |      |      |  Del |
+ * |   `  |   1  |   2  |   3  |   4  |   5  |   6  |   7  |   8  |   9  |   0  | Bksp |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
- * |      |      |      |Aud on|Audoff|AGnorm|AGswap|Qwerty|Colemk|Dvorak|      |      |
+ * | Del  |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |   -  |   =  |   [  |   ]  |  \   |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
- * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |      |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |ISO # |ISO / |      |      |Enter |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |      |      |      |             |      |      |      |      |      |
+ * |      |      |      |      |      |             |      | Next | Vol- | Vol+ | Play |
  * `-----------------------------------------------------------------------------------'
  */
-[_ADJUST] =  LAYOUT_ortho_4x12( \
-  _______, RESET,   _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_DEL, \
-  _______, _______, _______, AU_ON,   AU_OFF,  AG_NORM, AG_SWAP, QWERTY,  _______, _______,  _______, _______, \
-  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______ \
+[_NAV] = LAYOUT_ortho_4x12( \
+  _______, _______, KC_MS_BTN1, KC_MS_UP,    KC_MS_BTN2, _______,     _______, _______, _______, _______, _______, _______,\
+  _______, _______, KC_MS_LEFT, KC_MS_DOWN , KC_MS_RIGHT, _______,    KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT, _______, _______,\
+  _______, _______, _______, _______, _______, _______,               _______, _______, _______, _______, _______, _______,\
+  _______, _______, _______, _______, _______, _______,               _______, _______, _______, _______, _______, _______\
 )
-
 
 };
 
@@ -118,28 +158,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case LOWER:
       if (record->event.pressed) {
         layer_on(_LOWER);
-        update_tri_layer(_LOWER, _RAISE, _ADJUST);
       } else {
         layer_off(_LOWER);
-        update_tri_layer(_LOWER, _RAISE, _ADJUST);
       }
       return false;
       break;
     case RAISE:
       if (record->event.pressed) {
         layer_on(_RAISE);
-        update_tri_layer(_LOWER, _RAISE, _ADJUST);
       } else {
         layer_off(_RAISE);
-        update_tri_layer(_LOWER, _RAISE, _ADJUST);
-      }
-      return false;
-      break;
-    case ADJUST:
-      if (record->event.pressed) {
-        layer_on(_ADJUST);
-      } else {
-        layer_off(_ADJUST);
       }
       return false;
       break;
